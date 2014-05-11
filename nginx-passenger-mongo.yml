@@ -1,0 +1,18 @@
+---
+
+- hosts: all
+  roles:
+    - abtris.nginx-passenger
+
+  tasks:
+  - name: Install MongoDB
+    action: apt pkg=mongodb state=installed
+  - name: Copy MongoDB configuration
+    copy: src=./mongodb.conf dest=/etc/mongodb.conf
+            owner=root group=root mode=0644
+    notify:
+      - restart mongodb
+
+  handlers:
+    - name: restart mongodb
+      service: name=mongodb state=restarted
